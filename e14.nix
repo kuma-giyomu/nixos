@@ -43,8 +43,7 @@
   services.xserver.enable = true;
 
   # Enable the Deepin Desktop Environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
+  services.xserver.displayManager.lightdm.enable = false;
 
   # Configure keymap in X11
   services.xserver = {
@@ -91,8 +90,9 @@
     description = "guillaume";
     extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [
-      firefox-wayland
-      #  thunderbird
+      ferdium
+      asdf-vm
+      taskwarrior
     ];
     shell = pkgs.zsh;
   };
@@ -109,7 +109,54 @@
     libnotify
     wget
     curl
+    hyprland
+    clipman
+    wl-clipboard
+    fuzzel
+    udiskie
+    mako
+    pcmanfm
+    grim
+    slurp
+    hyprpaper
+    waybar
+    killall
+    ripgrep
+    fd
+    eza
+    delta
+    tig
+    lazygit
+    magic-wormhole-rs
+    papirus-icon-theme
+    firefox-wayland
+    ungoogled-chromium
+    pavucontrol
+    zoxide
+    bat
+    fzf
+    fzf-zsh
+    zenith
+    gcc
+    gnumake
+    vimPlugins.telescope-fzf-native-nvim
   ];
+
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      (nerdfonts.override {fonts = ["Hack"];})
+    ];
+    fontconfig = {
+      defaultFonts = {
+        serif = ["Noto Serif CJK JP" "DejaVu Serif"];
+        sansSerif = ["Noto Sans CJK JP" "DejaVu Sans"];
+        monospace = ["Noto Sans Mono CJK JP" "DejaVu Sans Mono"];
+      };
+    };
+  };
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -123,6 +170,7 @@
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
+  services.blueman.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -160,11 +208,23 @@
     enable = true;
   };
 
-  environment.sessionVariables = {
-    INPUT_METHOD = "fcitx";
-    QT_IM_MODULE = "fcitx";
-    GTK_IM_MODULE = "fcitx";
-    "XMODIFIERS=@im" = "fcitx";
-    XIM_SERVERS = "fcitx";
+  environment = {
+    sessionVariables = {
+      INPUT_METHOD = "fcitx";
+      QT_IM_MODULE = "fcitx";
+      # GTK_IM_MODULE = "fcitx";
+      "XMODIFIERS=@im" = "fcitx";
+      XIM_SERVERS = "fcitx";
+    };
+    shellAliases = {
+      ls = "eza --icons --group-directories-first";
+      zenith = "zenith -c 0 -d 0 -n 0";
+      suspend = "systemctl suspend";
+      wormhole = "wormhole";
+    };
+  };
+
+  programs.hyprland = {
+    enable = true;
   };
 }
