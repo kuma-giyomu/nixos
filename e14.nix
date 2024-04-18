@@ -148,6 +148,10 @@
     docker
     bottom
     lazydocker
+    mate.atril
+    gnome.eog
+    vlc
+    webp-pixbuf-loader
   ];
 
   fonts = {
@@ -195,14 +199,6 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.11"; # Did you read the comment?
 
-  # gtk = {
-  #   enable = true;
-  #   gtk3.extraConfig.gtk-decoration-layout = "menu:";
-  #   cursorTheme.name = "Qogir";
-  #   iconTheme.name = "Papyrus-";
-  #   theme.name = "Jasper-Grey-Dark-Compact";
-  # };
-
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5.addons = with pkgs; [
@@ -247,5 +243,20 @@
 
   virtualisation.docker = {
     enable = true;
+  };
+
+  xdg.mime.defaultApplications = {
+    "image/png" = [
+      "org.gnome.eog.desktop"
+    ];
+    "image/webp" = [
+      "org.gnome.eog.desktop"
+    ];
+    "image/jpeg" = [
+      "org.gnome.eog.desktop"
+    ];
+    "image/gif" = [
+      "org.gnome.eog.desktop"
+    ];
   };
 }
