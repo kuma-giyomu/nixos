@@ -88,7 +88,7 @@
   users.users.guillaume = {
     isNormalUser = true;
     description = "guillaume";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = ["networkmanager" "wheel" "docker"];
     packages = with pkgs; [
       ferdium
       asdf-vm
@@ -113,6 +113,7 @@
     clipman
     wl-clipboard
     fuzzel
+    udisks2
     udiskie
     mako
     pcmanfm
@@ -140,6 +141,13 @@
     gcc
     gnumake
     vimPlugins.telescope-fzf-native-nvim
+    amdvlk
+    sshfs
+    gimp
+    inkscape
+    docker
+    bottom
+    lazydocker
   ];
 
   fonts = {
@@ -171,6 +179,7 @@
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
   services.blueman.enable = true;
+  services.gvfs.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -185,6 +194,14 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.11"; # Did you read the comment?
+
+  # gtk = {
+  #   enable = true;
+  #   gtk3.extraConfig.gtk-decoration-layout = "menu:";
+  #   cursorTheme.name = "Qogir";
+  #   iconTheme.name = "Papyrus-";
+  #   theme.name = "Jasper-Grey-Dark-Compact";
+  # };
 
   i18n.inputMethod = {
     enabled = "fcitx5";
@@ -225,6 +242,10 @@
   };
 
   programs.hyprland = {
+    enable = true;
+  };
+
+  virtualisation.docker = {
     enable = true;
   };
 }
