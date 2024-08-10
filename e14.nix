@@ -47,8 +47,10 @@
 
   # Configure keymap in X11
   services.xserver = {
-    layout = "us";
-    xkbVariant = "";
+    xkb = {
+      layout = "us";
+      variant = "";
+    };
   };
 
   # Enable CUPS to print documents.
@@ -68,6 +70,7 @@
     };
   };
   security.rtkit.enable = true;
+  security.polkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -104,55 +107,65 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     alejandra
-    foot
-    zsh
-    libnotify
-    wget
-    curl
-    hyprland
-    clipman
-    wl-clipboard
-    fuzzel
-    udisks2
-    udiskie
-    mako
-    pcmanfm
-    grim
-    slurp
-    hyprpaper
-    waybar
-    killall
-    ripgrep
-    fd
-    eza
-    delta
-    tig
-    lazygit
-    magic-wormhole-rs
-    papirus-icon-theme
-    firefox-wayland
-    ungoogled-chromium
-    pavucontrol
-    zoxide
+    amdvlk
     bat
+    bottom
+    clipman
+    curl
+    delta
+    docker
+    eza
+    fd
+    firefox-wayland
+    foot
+    fuzzel
     fzf
     fzf-zsh
-    zenith
     gcc
-    gnumake
-    vimPlugins.telescope-fzf-native-nvim
-    amdvlk
-    sshfs
     gimp
-    inkscape
-    docker
-    bottom
-    lazydocker
-    mate.atril
+    gnome.adwaita-icon-theme
     gnome.eog
+    gnumake
+    grim
+    hyprland
+    hyprpaper
+    inkscape
+    killall
+    lazydocker
+    lazygit
+    libnotify
+    lxqt.lxqt-policykit
+    magic-wormhole-rs
+    mako
+    mate.atril
+    papirus-icon-theme
+    pavucontrol
+    pcmanfm
+    qemu
+    ripgrep
+    slurp
+    sshfs
+    tig
+    udiskie
+    udisks2
+    ungoogled-chromium
+    vimPlugins.telescope-fzf-native-nvim
     vlc
+    waybar
     webp-pixbuf-loader
+    wget
+    wl-clipboard
+    zenith
+    zoxide
+    zsh
   ];
+
+programs.steam = {
+  enable = true;
+  remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+};
+
 
   fonts = {
     enableDefaultPackages = true;
@@ -240,6 +253,9 @@
   programs.hyprland = {
     enable = true;
   };
+
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
 
   virtualisation.docker = {
     enable = true;
