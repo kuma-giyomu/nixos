@@ -109,6 +109,7 @@
     alejandra
     amdvlk
     bat
+    bibata-cursors
     bottom
     clipman
     curl
@@ -127,6 +128,7 @@
     gnome.eog
     gnumake
     grim
+    hyprcursor
     hyprland
     hyprpaper
     inkscape
@@ -141,6 +143,7 @@
     papirus-icon-theme
     pavucontrol
     pcmanfm
+    p7zip
     qemu
     ripgrep
     slurp
@@ -149,6 +152,7 @@
     udiskie
     udisks2
     ungoogled-chromium
+    unzip
     vimPlugins.telescope-fzf-native-nvim
     vlc
     waybar
@@ -197,6 +201,14 @@ programs.steam = {
   # services.openssh.enable = true;
   services.blueman.enable = true;
   services.gvfs.enable = true;
+  services.tlp = {
+    enable = true;
+    settings= {
+      START_CHARGE_THRESH_BAT0=40;
+      STOP_CHARGE_THRESH_BAT0=60;
+      RESTORE_THRESHOLDS_ON_BAT=1;
+    };
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
