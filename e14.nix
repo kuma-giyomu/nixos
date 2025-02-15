@@ -57,7 +57,6 @@
   services.printing.enable = true;
 
   # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   hardware.bluetooth = {
     enable = true; # enables support for Bluetooth
@@ -71,6 +70,16 @@
   };
   security.rtkit.enable = true;
   security.polkit.enable = true;
+  security.doas.enable = true;
+  security.sudo.enable = false;
+  # Configure doas
+  security.doas.extraRules = [
+    {
+      groups = ["wheel"];
+      keepEnv = true;
+      persist = true;
+    }
+  ];
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -92,11 +101,6 @@
     isNormalUser = true;
     description = "guillaume";
     extraGroups = ["networkmanager" "wheel" "docker"];
-    packages = with pkgs; [
-      ferdium
-      asdf-vm
-      taskwarrior
-    ];
     shell = pkgs.zsh;
   };
 
@@ -106,70 +110,20 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    alejandra
     amdvlk
-    bat
-    bibata-cursors
-    bottom
-    clipman
-    curl
-    delta
-    docker
-    eza
-    fd
-    firefox-wayland
-    foot
-    fuzzel
-    fzf
-    fzf-zsh
     gcc
-    gimp
-    gnome.adwaita-icon-theme
-    gnome.eog
-    gnumake
-    grim
-    hyprcursor
-    hyprland
-    hyprpaper
-    inkscape
-    killall
-    lazydocker
-    lazygit
-    libnotify
-    lxqt.lxqt-policykit
-    magic-wormhole-rs
-    mako
-    mate.atril
-    papirus-icon-theme
-    pavucontrol
-    pcmanfm
-    p7zip
     qemu
-    ripgrep
-    slurp
     sshfs
-    tig
-    udiskie
-    udisks2
-    ungoogled-chromium
-    unzip
-    vimPlugins.telescope-fzf-native-nvim
-    vlc
-    waybar
-    webp-pixbuf-loader
-    wget
-    wl-clipboard
-    zenith
-    zoxide
     zsh
+    foot
+    zoxide
   ];
 
-programs.steam = {
-  enable = true;
-  remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-  dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-};
-
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  };
 
   fonts = {
     enableDefaultPackages = true;
@@ -203,10 +157,10 @@ programs.steam = {
   services.gvfs.enable = true;
   services.tlp = {
     enable = true;
-    settings= {
-      START_CHARGE_THRESH_BAT0=40;
-      STOP_CHARGE_THRESH_BAT0=60;
-      RESTORE_THRESHOLDS_ON_BAT=1;
+    settings = {
+      START_CHARGE_THRESH_BAT0 = 40;
+      STOP_CHARGE_THRESH_BAT0 = 60;
+      RESTORE_THRESHOLDS_ON_BAT = 1;
     };
   };
 
@@ -225,21 +179,12 @@ programs.steam = {
   system.stateVersion = "23.11"; # Did you read the comment?
 
   i18n.inputMethod = {
-    enabled = "fcitx5";
+    type = "fcitx5";
+    enable = true;
     fcitx5.addons = with pkgs; [
       fcitx5-mozc
+      # fcitx5-gtk
     ];
-  };
-
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-    viAlias = true;
-    vimAlias = true;
-  };
-
-  programs.git = {
-    enable = true;
   };
 
   programs.zsh = {
@@ -248,43 +193,44 @@ programs.steam = {
 
   environment = {
     sessionVariables = {
+      NIXOS_OZONE_WL = "1";
       INPUT_METHOD = "fcitx";
       QT_IM_MODULE = "fcitx";
       # GTK_IM_MODULE = "fcitx";
       "XMODIFIERS=@im" = "fcitx";
       XIM_SERVERS = "fcitx";
-    };
-    shellAliases = {
-      ls = "eza --icons --group-directories-first";
-      zenith = "zenith -c 0 -d 0 -n 0";
-      suspend = "systemctl suspend";
-      wormhole = "wormhole";
+      DOCKER_HOST = "unix:///run/user/1000/podman/podman.sock";
+      DOCKER_SOCK = "/run/user/1000/podman/podman.sock";
     };
   };
+
+  programs.xfconf.enable = true;
+  programs.file-roller.enable = true;
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin
+    ];
+  };
+
 
   programs.hyprland = {
     enable = true;
   };
 
-  virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
 
-  virtualisation.docker = {
-    enable = true;
-  };
+  virtualisation = {
+    libvirtd.enable = true;
+    containers.enable = true;
+    podman = {
+      enable = true;
 
-  xdg.mime.defaultApplications = {
-    "image/png" = [
-      "org.gnome.eog.desktop"
-    ];
-    "image/webp" = [
-      "org.gnome.eog.desktop"
-    ];
-    "image/jpeg" = [
-      "org.gnome.eog.desktop"
-    ];
-    "image/gif" = [
-      "org.gnome.eog.desktop"
-    ];
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
   };
 }
